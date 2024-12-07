@@ -10,18 +10,31 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       body: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Obx(() {
-                  return Text(controller.customerName.toString());
-                }),
-              ),
-              ElevatedButton(onPressed: () {
-                controller.onChange();
-              }, child: const Text("Change"))
-            ],
-          )),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Obx(() {
+            return SizedBox(
+              height: 120,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  primary: false,
+                  itemCount: controller.listAccount.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      controller.listAccount[index].profile!.name.toString(),
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  }),
+            );
+          }),
+          ElevatedButton(
+              onPressed: () {
+                //controller.fetchAccounts();
+              },
+              child: const Text("Change"))
+        ],
+      )),
     );
   }
 }

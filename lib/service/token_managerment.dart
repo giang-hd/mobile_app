@@ -1,10 +1,23 @@
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager {
   static const _accessTokenKey = 'accessToken';
   static const _refreshTokenKey = 'refreshToken';
+  static const _id = 'id';
+
+  static Future<void> saveId(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_id, id);
+  }
+
+  static Future<String?> getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_id);
+  }
 
   static Future<void> saveAccessToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -67,6 +80,17 @@ class TokenInterceptor extends Interceptor {
     return handler.next(err);
   }
 
+  @override
+  Future<void> onResponse(
+      Response response,
+      ResponseInterceptorHandler handler
+      ) async {
+    print('Response Status Code: ${response.statusCode}');
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    print('Response Data: ${encoder.convert(response.data)}');
+    return handler.next(response);
+  }
+
   Future<String> _refreshToken() async {
     final dio = Dio();
     final refreshToken = await TokenManager.getRefreshToken();
@@ -78,6 +102,31 @@ class TokenInterceptor extends Interceptor {
     await TokenManager.saveAccessToken(response.data['accessToken']);
 
     return response.data['accessToken'];
+  }
+}
+
+class DioConfig {
+  static Dio createDio() {
+    final dio = Dio();
+
+    dio.interceptors.add(TokenInterceptor());
+
+    dio.options.baseUrl = 'http://localhost:8080/api/v1';
+    dio.options.connectTimeout = const Duration(seconds: 30);
+    dio.options.receiveTimeout = const Duration(seconds: 30);
+    dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    dio.interceptors.add(LogInterceptor(
+      request: true,
+      requestBody: true,
+      responseBody: true,
+      error: true,
+    ));
+
+    return dio;
   }
 }
 
@@ -118,7 +167,7 @@ class BaseApiService {
       );
       return response.data;
     } on DioException catch (e) {
-      throw _handleError(e);
+      throw handleError(e);
     } catch (e) {
       throw 'Lỗi không xác định: ${e.toString()}';
     }
@@ -139,48 +188,50 @@ class BaseApiService {
       );
       return response.data;
     } on DioException catch (e) {
-      throw _handleError(e);
+      throw handleError(e);
     } catch (e) {
       throw 'Lỗi không xác định: ${e.toString()}';
     }
   }
 
-  dynamic _handleError(DioException error) {
-    if (error.response != null) {
-      switch (error.response!.statusCode) {
-        case 400:
-          return 'Yêu cầu không hợp lệ';
-        case 401:
-          return error.response?.data['error'];
-        case 403:
-          return 'Truy cập bị từ chối';
-        case 404:
-          return 'Không tìm thấy tài nguyên';
-        case 500:
-          return 'Lỗi máy chủ nội bộ';
-        default:
-          return error.response?.data["error"] ?? 'Lỗi không xác định';
-      }
-    }
 
-    print('Dio Error: ${error.message}');
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-        return 'Kết nối mất quá nhiều thời gian';
-      case DioExceptionType.receiveTimeout:
-        return 'Nhận dữ liệu quá lâu';
-      case DioExceptionType.badCertificate:
-        return 'Lỗi chứng chỉ bảo mật';
-      case DioExceptionType.badResponse:
-        return error.response?.data['message'] ?? 'Lỗi không xác định từ server';
-      case DioExceptionType.cancel:
-        return 'Yêu cầu đã bị hủy';
-      case DioExceptionType.connectionError:
-        return 'Không thể kết nối tới máy chủ';
-      case DioExceptionType.unknown:
-        return 'Lỗi kết nối không xác định';
+}
+
+dynamic handleError(DioException error) {
+  if (error.response != null) {
+    switch (error.response!.statusCode) {
+      case 400:
+        return 'Yêu cầu không hợp lệ';
+      case 401:
+        return error.response?.data['error'];
+      case 403:
+        return 'Truy cập bị từ chối';
+      case 404:
+        return 'Không tìm thấy tài nguyên';
+      case 500:
+        return 'Lỗi máy chủ nội bộ';
       default:
-        return 'Lỗi không xác định';
+        return error.response?.data["error"] ?? 'Lỗi không xác định';
     }
+  }
+
+  print('Dio Error: ${error.message}');
+  switch (error.type) {
+    case DioExceptionType.connectionTimeout:
+      return 'Kết nối mất quá nhiều thời gian';
+    case DioExceptionType.receiveTimeout:
+      return 'Nhận dữ liệu quá lâu';
+    case DioExceptionType.badCertificate:
+      return 'Lỗi chứng chỉ bảo mật';
+    case DioExceptionType.badResponse:
+      return error.response?.data['message'] ?? 'Lỗi không xác định từ server';
+    case DioExceptionType.cancel:
+      return 'Yêu cầu đã bị hủy';
+    case DioExceptionType.connectionError:
+      return 'Không thể kết nối tới máy chủ';
+    case DioExceptionType.unknown:
+      return 'Lỗi kết nối không xác định';
+    default:
+      return 'Lỗi không xác định';
   }
 }

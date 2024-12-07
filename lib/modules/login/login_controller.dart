@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/service/app_page.dart';
 
+import '../../models/login/login.dart';
+import '../../service/service.dart';
 import '../../service/token_managerment.dart';
 import '../home/home_view.dart';
 
 class LoginController extends GetxController {
-  final BaseApiService _apiService = BaseApiService();
+  late ApiService apiService = ApiService(DioConfig.createDio());
 
   final emailController = TextEditingController(text: "odeyiang303@gmail.com");
   final passwordController = TextEditingController(text: "123456");
@@ -44,18 +46,19 @@ class LoginController extends GetxController {
     error.value = null;
 
     try {
-      final response = await _apiService.post('/login', data: {
-        'username': emailController.text.trim(),
-        'password': passwordController.text.trim(),
-      });
-      await TokenManager.saveAccessToken(response['accessToken']);
-      await TokenManager.saveRefreshToken(response['refreshToken']);
+      final response = await apiService.login(
+        LoginRequest(username: emailController.text.trim(), password: passwordController.text.trim()),
+      );
+      await TokenManager.saveAccessToken(response.accessToken.toString());
+      await TokenManager.saveRefreshToken(response.refreshToken.toString());
+      await TokenManager.saveId(response.id.toString());
       String? accessToken = await TokenManager.getAccessToken();
       print('Access Token: $accessToken');
       Get.snackbar('Thành công', 'Đăng nhập thành công');
-      Get.offAndToNamed(AppRoutes.HOME);
+      Get.offAndToNamed(AppRoutes.MAIN);
     } on DioException catch (dioError) {
-      error.value = dioError.message;
+      error.value = handleError(dioError);
+      print(error.value);
       Get.snackbar('Lỗi', error.value.toString(),
           backgroundColor: Colors.red, colorText: Colors.white);
     } catch (e) {
