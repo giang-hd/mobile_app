@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
   get: ^4.6.6
   dio: ^5.7.0
   shared_preferences: ^2.3.3
@@ -38,6 +40,7 @@ dependencies:
   retrofit: ^4.4.1
   pretty_dio_logger: ^1.4.0
   google_fonts: ^6.2.1
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -49,7 +52,8 @@ dev_dependencies:
   build_runner: ^2.4.13
   json_serializable: ^6.9.0
   retrofit_generator: ^9.1.5
-
+  intl_translation: ^0.20.1
+  intl_utils: ^2.8.7
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -67,11 +71,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  generate: false
   # To add assets to your application, add an assets section, like this:
   # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  #  - lib/l10n/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

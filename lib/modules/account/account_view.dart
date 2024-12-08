@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/modules/account/account_controller.dart';
 
+import '../../generated/l10n.dart';
 import '../../service/color_app.dart';
-import '../../utils/widget/common_widget.dart';
+import '../../utils/widget/button_common.dart';
+import '../../utils/widget/widgetOne.dart';
 
 class AccountView extends GetView<AccountController> {
   const AccountView({super.key});
@@ -19,55 +20,104 @@ class AccountView extends GetView<AccountController> {
           child: Column(
             children: [
               Expanded(child: Obx(() {
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Account',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: NetworkImage(
+                                  controller.detailAccount.value.profile?.img ?? "https://via.placeholder.com/150",
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                                borderRadius: BorderRadius.circular(20), ),
+                              height: 80,
+                              width: 80,
+                              child: Container()),
+                          const SizedBox(
+                            width: 16,
                           ),
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.grey[300],
-                          child:
-                              Image.network("https://via.placeholder.com/150"),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    AccountInfoTile(
-                      label: 'Username',
-                      value: controller.detailAccount.value.profile?.name ?? "",
-                    ),
-                    AccountInfoTile(
-                      label: 'Email',
-                      value: controller.detailAccount.value.username ?? "",
-                    ),
-                    AccountInfoTile(
-                      label: 'Phone',
-                      value:
-                          controller.detailAccount.value.profile?.phone ?? "",
-                    ),
-                    AccountInfoTile(
-                      label: 'Address',
-                      value:
-                          controller.detailAccount.value.profile?.address ?? "",
-                    )
-                  ],
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Name User',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Email',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      AccountInfoTile(
+                        label: S.of(context).userName,
+                        value:
+                            controller.detailAccount.value.profile?.name ?? S.current.isNullValue,
+                      ),
+                      AccountInfoTile(
+                        label: S.of(context).email,
+                        value: controller.detailAccount.value.username.toString(),
+                      ),
+                      AccountInfoTile(
+                        label: S.of(context).phoneNumber,
+                        value:
+                            controller.detailAccount.value.profile?.phone ?? S.current.isNullValue,
+                      ),
+                      AccountInfoTile(
+                        label: S.of(context).address,
+                        value:
+                            controller.detailAccount.value.profile?.address ?? S.current.isNullValue,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      WidgetOne(
+                        title: S.of(context).information,
+                        icon: Icons.info_outlined,
+                        onTap: () {},
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      WidgetOne(
+                        title: S.of(context).changePass,
+                        icon: Icons.lock_outline,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
                 );
               })),
               ButtonCommon(
                 onTap: () {
-                  print("object");
+                  // if (Get.locale?.languageCode == 'en') {
+                  //   Get.updateLocale(const Locale('vi'));
+                  // } else {
+                  //   Get.updateLocale(const Locale('en'));
+                  // }
+                  controller.logout();
                 },
                 enableIcon: false,
-                textButton: 'Logout',
-                bgColor: primaryColor,
-                textColor: Colors.white,
+                textButton: S.of(context).logout,
+                bgColor: Colors.white,
+                textColor: Colors.black,
+                fontWeight: FontWeight.bold,
               )
             ],
           ),

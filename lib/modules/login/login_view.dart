@@ -21,36 +21,18 @@ class LoginScreen extends GetView<LoginController> {
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-
-                  // Ô nhập tên (chỉ khi đăng ký)
-                  if (!controller.isLogin.value)
-                    TextField(
-                      controller: controller.nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Họ và Tên',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-
-                  const SizedBox(height: 10),
-
-                  // Ô nhập email
                   TextField(
-                    controller: controller.emailController,
-                    decoration:  const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(),
+                    controller:controller.isLogin.value ? controller.emailController : controller.emailSignupController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-
                   const SizedBox(height: 10),
-
-                  // Ô nhập mật khẩu
                   TextField(
-                    controller: controller.passwordController,
+                    controller:controller.isLogin.value ? controller.passwordController : controller.passSignupController,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Mật Khẩu',
@@ -59,11 +41,11 @@ class LoginScreen extends GetView<LoginController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  if(controller.isValue.value)
-                    Align(alignment: Alignment.centerLeft,
-                        child: Text(controller.error.value.toString(), style: const TextStyle(color: Colors.red))),
-
-                  // Nhớ mật khẩu và quên mật khẩu (chỉ khi đăng nhập)
+                  if (controller.isValue.value)
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(controller.error.value.toString(),
+                            style: const TextStyle(color: Colors.red))),
                   if (controller.isLogin.value)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +72,7 @@ class LoginScreen extends GetView<LoginController> {
 
                   // Nút đăng nhập/đăng ký
                   ElevatedButton(
-                    onPressed: controller.submit,
+                    onPressed: controller.isLogin.value ? controller.submit : controller.signup,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                     ),
@@ -100,7 +82,6 @@ class LoginScreen extends GetView<LoginController> {
 
                   const SizedBox(height: 10),
 
-                  // Chuyển đổi giữa đăng nhập và đăng ký
                   TextButton(
                     onPressed: controller.toggleAuthMode,
                     child: Text(controller.isLogin.value

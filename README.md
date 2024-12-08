@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+flutter pub run build_runner build
+flutter pub run intl_utils:generate
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -13,8 +13,9 @@ class HomeController extends GetxController{
   late ApiService apiService = ApiService(DioConfig.createDio());
   final listAccount = <AccountModel>[].obs;
 
-  final RxnString error = RxnString();
+  final RxnString  error = RxnString();
   final RxBool isLoading = false.obs;
+  final RxBool isStatusCode = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -24,12 +25,11 @@ class HomeController extends GetxController{
   Future<void> fetchAccounts() async {
     try {
       isLoading.value = true;
+      isStatusCode.value = true;
       final response = await apiService.getAccount();
       listAccount.value = response.data;
     } on DioException catch (dioError) {
-      print('Dio Error Type: ${dioError.type}');
-      print('Dio Error Message: ${dioError.message}');
-
+      isStatusCode.value = false;
       if (dioError.response != null) {
         print('Error Response Data: ${dioError.response?.data}');
         print('Error Status Code: ${dioError.response?.statusCode}');

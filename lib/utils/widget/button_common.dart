@@ -7,7 +7,9 @@ class ButtonCommon extends StatelessWidget {
   final Function? onTap;
   final EdgeInsets? margin;
   final Color? bgColor;
+  final Color? borderColor;
   final Color? textColor;
+  final FontWeight? fontWeight;
 
   const ButtonCommon({
     super.key,
@@ -18,6 +20,7 @@ class ButtonCommon extends StatelessWidget {
     this.margin,
     this.bgColor,
     this.textColor,
+    this.borderColor, this.fontWeight,
   });
 
   @override
@@ -30,6 +33,7 @@ class ButtonCommon extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
               color: bgColor,
+              border: Border.all(color: borderColor ?? Colors.grey, width: 0.5),
               borderRadius: const BorderRadius.all(Radius.circular(8))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +41,7 @@ class ButtonCommon extends StatelessWidget {
               Center(
                   child: Text(
                 textButton,
-                style: TextStyle(color: textColor),
+                style: TextStyle(color: textColor, fontWeight: fontWeight),
               )),
               SizedBox(
                 width: enableIcon ? 8 : 0,

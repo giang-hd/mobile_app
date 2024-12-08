@@ -14,6 +14,12 @@ abstract class ApiService {
   @POST("/login")
   Future<LoginResponse> login(@Body() LoginRequest request);
 
+  @POST("/signup")
+  Future<SignupResponse> signup(@Body() LoginRequest request);
+
+  @POST("/logout")
+  Future<void> logout();
+
   @GET("/account")
   Future<AccountResponse> getAccount();
 

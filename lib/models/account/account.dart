@@ -47,3 +47,34 @@ class DetailAccountResponse {
 
   Map<String, dynamic> toJson() => _$DetailAccountResponseToJson(this);
 }
+
+@JsonSerializable()
+class SignupModel {
+  String? username;
+  String? password;
+  bool? admin;
+  @JsonKey(name: "_id")
+  String? id;
+
+  SignupModel({
+    this.username,
+    this.password,
+    this.admin,
+    this.id,
+  });
+ factory SignupModel.fromJson(Map<String, dynamic> json) => _$SignupModelFromJson(json);
+  Map<String, dynamic> toJson() => _$SignupModelToJson(this);
+}
+
+@JsonSerializable()
+class SignupResponse {
+  String? message;
+  final SignupModel? data;
+
+  SignupResponse({this.data, this.message});
+
+  factory SignupResponse.fromJson(Map<String, dynamic> json) =>
+      _$SignupResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignupResponseToJson(this);
+}

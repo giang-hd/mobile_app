@@ -19,16 +19,17 @@ class MainPage extends GetView<MainController> {
             currentIndex: controller.selectedIndex.value,
             selectedItemColor: Colors.white,
             onTap: controller.changeTabIndex,
-            items: const [
-              BottomNavigationBarItem(
+            items:  [
+              if(controller.accountController.detailAccount.value.admin == true)
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.search),
                 label: 'Search',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
               ),

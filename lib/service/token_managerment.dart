@@ -44,6 +44,11 @@ class TokenManager {
     await prefs.remove(_accessTokenKey);
     await prefs.remove(_refreshTokenKey);
   }
+
+  static Future<void> removeId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_id);
+  }
 }
 
 class TokenInterceptor extends Interceptor {
