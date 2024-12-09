@@ -8,6 +8,7 @@ class TokenManager {
   static const _accessTokenKey = 'accessToken';
   static const _refreshTokenKey = 'refreshToken';
   static const _id = 'id';
+  static const _pass = 'pass';
 
   static Future<void> saveId(String id) async {
     final prefs = await SharedPreferences.getInstance();
@@ -17,6 +18,16 @@ class TokenManager {
   static Future<String?> getId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_id);
+  }
+
+  static Future<void> savePass(String pass) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_pass, pass);
+  }
+
+  static Future<String?> getPass() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_pass);
   }
 
   static Future<void> saveAccessToken(String token) async {
@@ -48,6 +59,11 @@ class TokenManager {
   static Future<void> removeId() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_id);
+  }
+
+  static Future<void> removePass() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_pass);
   }
 }
 

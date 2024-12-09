@@ -25,4 +25,8 @@ abstract class ApiService {
 
   @GET("/account/{id}")
   Future<DetailAccountResponse> getAnAccount(@Path('id') String id);
+
+  @PUT("/account/{id}/change-pass")
+  Future<void> putChangePass(
+    @Path('id') String id,@Body() PassRequest request);
 }

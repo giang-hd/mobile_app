@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mobile_app/modules/account/account_binding.dart';
 import 'package:mobile_app/modules/account/account_view.dart';
+import 'package:mobile_app/modules/account/change_pass/change_pass_view.dart';
 import 'package:mobile_app/modules/home/home_binding.dart';
 import 'package:mobile_app/modules/login/login_binding.dart';
 import 'package:mobile_app/modules/main/main_binding.dart';
@@ -33,9 +34,15 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomePage(),
       binding: HomeBinding(),
-    ), GetPage(
+    ),
+    GetPage(
       name: _Paths.ACCOUNT,
       page: () => const AccountView(),
+      binding: AccountBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGEPASS,
+      page: () => const ChangePassView(),
       binding: AccountBinding(),
     ),
   ];

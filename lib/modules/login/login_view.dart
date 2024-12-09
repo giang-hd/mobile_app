@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'login_controller.dart';
 
@@ -22,7 +23,9 @@ class LoginScreen extends GetView<LoginController> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    controller:controller.isLogin.value ? controller.emailController : controller.emailSignupController,
+                    controller: controller.isLogin.value
+                        ? controller.emailController
+                        : controller.emailSignupController,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       prefixIcon: Icon(Icons.email),
@@ -32,12 +35,19 @@ class LoginScreen extends GetView<LoginController> {
                   ),
                   const SizedBox(height: 10),
                   TextField(
-                    controller:controller.isLogin.value ? controller.passwordController : controller.passSignupController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
+                    controller: controller.isLogin.value
+                        ? controller.passwordController
+                        : controller.passSignupController,
+                    obscureText: !controller.isPasswordVisible.value,
+                    decoration: InputDecoration(
                       labelText: 'Mật Khẩu',
-                      prefixIcon: Icon(Icons.lock),
-                      border: OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                          onPressed: controller.togglePasswordVisibility,
+                          icon: Icon(!controller.isPasswordVisible.value
+                              ? Icons.visibility
+                              : Icons.visibility_off)),
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -72,7 +82,9 @@ class LoginScreen extends GetView<LoginController> {
 
                   // Nút đăng nhập/đăng ký
                   ElevatedButton(
-                    onPressed: controller.isLogin.value ? controller.submit : controller.signup,
+                    onPressed: controller.isLogin.value
+                        ? controller.login
+                        : controller.signup,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                     ),

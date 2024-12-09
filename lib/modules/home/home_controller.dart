@@ -39,8 +39,7 @@ class HomeController extends GetxController{
           backgroundColor: Colors.red, colorText: Colors.white);
     } catch (e) {
       error.value = 'Lỗi không xác định: ${e.toString()}';
-      print(e.toString());
-      Get.snackbar('Lỗi nè', e.toString(),
+      Get.snackbar('Lỗi nè', error.value.toString(),
           backgroundColor: Colors.red, colorText: Colors.white);
     } finally {
       isLoading.value = false;

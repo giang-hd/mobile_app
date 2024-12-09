@@ -14,3 +14,16 @@ class LoginRequest {
 
   Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
 }
+
+@JsonSerializable()
+class PassRequest {
+  final String? newPassword;
+  final String? oldPassword;
+
+  PassRequest({required this.newPassword, required this.oldPassword});
+
+  factory PassRequest.fromJson(Map<String, dynamic> json) =>
+      _$PassRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PassRequestToJson(this);
+}

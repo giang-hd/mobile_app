@@ -21,6 +21,8 @@ class LoginController extends GetxController {
   RxBool rememberMe = false.obs;
   final RxBool isLoading = false.obs;
   final RxnString error = RxnString();
+  RxBool isPasswordVisible = false.obs;
+
   @override
   void onInit() {
     loadSavedCredentials();
@@ -34,17 +36,20 @@ class LoginController extends GetxController {
     Get.snackbar('Thông báo', 'Kiểm tra email để đặt lại mật khẩu');
   }
 
+  void togglePasswordVisibility() {
+    isPasswordVisible.toggle();
+  }
+
   void loadSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('remember_me') == true) {
-      // Nếu đã chọn ghi nhớ đăng nhập
       rememberMe.value = true;
       emailController.text = prefs.getString('email') ?? '';
       passwordController.text = prefs.getString('password') ?? '';
     }
   }
 
-  Future<void> submit() async {
+  Future<void> login() async {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       isValue.value = true;
       error.value = 'Vui lòng nhập đầy đủ email và mật khẩu';
@@ -56,12 +61,10 @@ class LoginController extends GetxController {
     error.value = null;
     final prefs = await SharedPreferences.getInstance();
     if (rememberMe.value) {
-      // Lưu thông tin đăng nhập nếu checkbox được tích
       await prefs.setBool('remember_me', true);
       await prefs.setString('email', emailController.text);
       await prefs.setString('password', passwordController.text);
     } else {
-      // Xóa thông tin đăng nhập nếu checkbox không được tích
       await prefs.remove('remember_me');
       await prefs.remove('email');
       await prefs.remove('password');
@@ -74,13 +77,13 @@ class LoginController extends GetxController {
       await TokenManager.saveAccessToken(response.accessToken.toString());
       await TokenManager.saveRefreshToken(response.refreshToken.toString());
       await TokenManager.saveId(response.id.toString());
+      await TokenManager.savePass(passwordController.text);
       String? accessToken = await TokenManager.getAccessToken();
       print('Access Token: $accessToken');
       Get.snackbar('Thành công', 'Đăng nhập thành công');
       Get.offAndToNamed(AppRoutes.MAIN);
     } on DioException catch (dioError) {
       error.value = handleError(dioError);
-      print(error.value);
       Get.snackbar('Lỗi', error.value.toString(),
           backgroundColor: Colors.red, colorText: Colors.white);
     } catch (e) {
@@ -121,6 +124,7 @@ class LoginController extends GetxController {
       await TokenManager.saveAccessToken(response.accessToken.toString());
       await TokenManager.saveRefreshToken(response.refreshToken.toString());
       await TokenManager.saveId(response.id.toString());
+      await TokenManager.savePass(passSignupController.text);
       Future.delayed(const Duration(seconds: 1),(){
         Get.offAndToNamed(AppRoutes.MAIN);
       });

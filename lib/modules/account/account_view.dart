@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/modules/account/account_controller.dart';
+import 'package:mobile_app/service/app_page.dart';
 
 import '../../generated/l10n.dart';
-import '../../service/color_app.dart';
 import '../../utils/widget/button_common.dart';
 import '../../utils/widget/widgetOne.dart';
 
@@ -98,7 +98,9 @@ class AccountView extends GetView<AccountController> {
                       WidgetOne(
                         title: S.of(context).changePass,
                         icon: Icons.lock_outline,
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed(AppRoutes.CHANGEPASS);
+                        },
                       ),
                     ],
                   ),

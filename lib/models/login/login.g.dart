@@ -16,3 +16,14 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
       'username': instance.username,
       'password': instance.password,
     };
+
+PassRequest _$PassRequestFromJson(Map<String, dynamic> json) => PassRequest(
+      newPassword: json['newPassword'] as String?,
+      oldPassword: json['oldPassword'] as String?,
+    );
+
+Map<String, dynamic> _$PassRequestToJson(PassRequest instance) =>
+    <String, dynamic>{
+      'newPassword': instance.newPassword,
+      'oldPassword': instance.oldPassword,
+    };
